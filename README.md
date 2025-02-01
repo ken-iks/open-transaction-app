@@ -18,7 +18,7 @@ go run .
 
 In seperate terminal, start frontend:
 ```bash
-cd backend
+cd frontend
 npm run start
 ```
 This will take you to the login page, where you login with your Account Number and Routing Number.
