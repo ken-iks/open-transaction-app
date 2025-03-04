@@ -39,7 +39,7 @@ function App() {
         Logout
       </button>
 
-      <h1>MESSAGE API</h1>
+      <h1>TRANSACTION API</h1>
       <input
         type="text"
         value={input}
