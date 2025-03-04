@@ -1,32 +1,68 @@
-# Message API
+# Open Transaction API
 
-## Usage
+## Overview
 
-In terminal, start backend:
+This project is an **open transaction system** that allows users to initiate private transactions between accounts while maintaining a fully visible ledger of all transactions in a centralized database. Think of it as a **private blockchain-inspired system** where every user can send transactions securely, but all transactions are publicly accessible for transparency.
+
+Each transaction is recorded in a structured format, ensuring integrity and accountability while maintaining sender authentication.
+
+## Getting Started
+
+### Backend Setup (Go)
+To start the backend server, run:
 ```bash
 cd backend
 go run .
 ```
 
-In seperate terminal, start frontend:
+### Frontend Setup (React)
+In a separate terminal, start the frontend:
 ```bash
 cd frontend
-npm run start
+npm install  # Install dependencies (if not already installed)
+npm start
 ```
-This will take you to the login page, where you login with your Account Number and Routing Number.
+This will launch the frontend, directing you to the login page.
 
-### OAuth:
+## Authentication & Session Management
 
-When Attempting to submit a message to the Database, the `sender_an` and `sender_rtn` are cross referenced with the currently logged in user's account number and routing number as a step to ensure a user is only submitting messages where they are the sender.
+### Login
+Users log in using their **Account Number** and **Routing Number**. A session is created upon successful login, allowing users to submit transactions securely.
 
-### Message Submission:
+### OAuth & Message Submission
+Before a transaction is added to the database, the system performs an **OAuth-like check** to verify that the **sender's account and routing numbers match the currently logged-in user**. This prevents unauthorized transactions from being created on behalf of other users.
 
-To submit a message, you can put your message in the textbox and press the submit button. This will only submit the message if your message is in the structure: `seq=A;sender_rtn=B;sender_an=C;receiver_rtn=D;receiver_an=E;amount=F` (in any order), where {A-F} all represent strings that only contain integers, and `sender_an` and `sender_rtn` are aligned with the current logged in user's information
+## Transactions
 
-On the backend, this is handled by the `Create_message` function and the `DB_insert` function.
+### Submitting a Transaction
+To send a transaction, users must input their message in the format:
 
-### Message Retrieval:
+```
+seq=A;sender_rtn=B;sender_an=C;receiver_rtn=D;receiver_an=E;amount=F
+```
 
-To retrieve a message, you choose the sequence number of the particular message you want to retrieve, and it will be displayed in table format - using 'ag-grid-react' on the frontend. If you want to retrieve all messages, just choose any negative sequence number and the full table will be displaying all messages in the Database. 'ag-grid-react' automatically handles pagination and sorting so I did not need seperate logic for it.
+- `{A-F}` are integer values.
+- `sender_an` and `sender_rtn` **must match** the logged-in user's credentials.
+- Transactions failing this validation will be rejected.
 
-On the backend, this is handled by the `Db_fetch` function.
+This process is managed on the backend by:
+- `Create_message` → Parses and validates transaction input.
+- `DB_insert` → Stores valid transactions in the database.
+
+### Retrieving Transactions
+Users can fetch transactions using a **sequence number**:
+- Entering a **specific sequence number** returns the corresponding transaction.
+- Entering a **negative number** retrieves **all transactions** in the database.
+
+Transactions are displayed in a **sortable and paginated table** using `ag-grid-react`.
+
+Backend logic for retrieval:
+- `DB_fetch` → Queries the database based on the sequence number.
+
+## Future Improvements
+- **Encryption**: Adding cryptographic security for transactions.
+- **Distributed Ledger**: Exploring decentralization or blockchain-like implementation.
+- **Smart Contracts**: Implementing rules-based automation for transactions.
+- **User Profiles**: Enhancing account management and permissions.
+
+
